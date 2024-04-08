@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SysSpecter - Live Graph</title>
+</head>
+
+<body style="background-color: #111">
+  <canvas id="myChart"></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script>
+    const _MAXIMUM_VALUES_PER_PAGE = 90;
+    const _REQUEST_INTERVAL = 1000;
+  </script>
+  <script>
+    console.log("github: aDarkDev - SysSpecter")
+    const ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [
+
+      ],
+      datasets: [
+        {
+        data: [
+
+        ],
+        lineTension: 0.1,
+        backgroundColor: '#ebcf3473',
+        borderColor: '#ebcf34',
+        borderWidth: 4,
+        label: 'Incoming (Mbit)',
+        fill: true
+      },
+       {
+        data: [
+
+        ],
+        lineTension: 0.1,
+        backgroundColor: '#34baeb73',
+        borderColor: '#34baeb',
+        borderWidth: 4,
+        label: 'Outgoing (Mbit)',
+        fill: true
+       }
+    ]
+    },
+    options: {
+      plugins: {
+      legend: {
+        display: true
+      },
+      tooltip: {
+        boxPadding: 5
+      }
+      }
+    }
+    })
+    
+      function addData(chart, label, inv, outv) {
+      chart.data.labels.push(label);
+      chart.data.datasets[0].data.push(inv);
+      chart.data.datasets[1].data.push(outv);
+      chart.update();
+    }
+    function removeFirstData(chart) {
+      chart.data.labels.splice(0, 1);
+      chart.data.datasets[0].data.splice(0, 1);
+      chart.data.datasets[1].data.splice(0, 1);
+      chart.update();
+    }
+    function getData(){
+      $.get("/network/traffic/per_second", function(data){
+       if(myChart.data.datasets[1].data.length >= _MAXIMUM_VALUES_PER_PAGE){
+          removeFirstData(myChart);
+       }
+       var date = new Date();
+       var h = date.getHours();
+       var m = date.getMinutes();
+       var s = date.getSeconds();
+       if(h < 10){
+        h = ("0"+h);
+       }
+       if(m < 10){
+        m = ("0"+m);
+       }
+       if(s < 10){
+        s = ("0"+s);
+       }
+       addData(myChart, h+":"+m+":"+s, data.incoming, data.outgoing);
+      });
+    }
+    getData();
+    var interval = setInterval("getData()", _REQUEST_INTERVAL);
+  </script>
+</body>
+</html>
