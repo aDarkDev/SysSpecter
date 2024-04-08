@@ -194,11 +194,6 @@ Example Response:
 
 - `curl http://localhost:port/network/traffic/graph`
 - Html live graph, open in browser: `http://localhost:port/network/traffic/live_graph`
-  
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <img src="https://github.com/aDarkDev/SysSpecter/assets/121636230/721bb665-da5f-4c59-b573-c2d9d91da58b" width="500" height="200">
-  <img src="https://github.com/aDarkDev/SysSpecter/assets/121636230/106c939b-9e3c-4346-a430-40581123e485" width="500" height="200">
-</div>
 
 
 ### Incoming Network Traffic
